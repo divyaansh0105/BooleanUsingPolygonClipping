@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+/.vs
+/BooleanU.8A83C181/x64/Debug
+/x64/Debug
