@@ -72,7 +72,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>"./headers";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>"headers";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -110,13 +110,19 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Clipping.cpp" />
     <ClCompile Include="src\OpenGLWindow.cpp" />
+    <ClCompile Include="src\Point2D.cpp" />
+    <ClCompile Include="src\Point3D.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\STLReader.cpp" />
+    <ClCompile Include="src\STLWriter.cpp" />
+    <ClCompile Include="src\Triangle.cpp" />
+    <ClCompile Include="src\Triangulation.cpp" />
     <ClCompile Include="src\Visualizer.cpp" />
-    <QtRcc Include="Visualizer.qrc" />
     <ClCompile Include="main.cpp">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
@@ -128,8 +134,20 @@
     <QtMoc Include="headers\OpenGLWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headers\Clipping.h" />
+    <ClInclude Include="headers\Point2D.h" />
+    <ClInclude Include="headers\Point3D.h" />
     <ClInclude Include="headers\stdafx.h" />
+    <ClInclude Include="headers\STLReader.h" />
+    <ClInclude Include="headers\STLWriter.h" />
+    <ClInclude Include="headers\Triangle.h" />
+    <ClInclude Include="headers\Triangulation.h" />
     <QtMoc Include="headers\Visualizer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\cube1.stl" />
+    <None Include="resources\cube2.stl" />
+    <None Include="resources\sphere.stl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
