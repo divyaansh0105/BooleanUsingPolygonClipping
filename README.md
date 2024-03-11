@@ -55,5 +55,7 @@ To use the project:
 3. The common intersecting portion will be identified and rendered using OpenGL.
  
 ## UI ScreenShot 
+![Screenshot (98)](https://github.com/divyaansh0105/BooleanUsingPolygonClipping/assets/158052399/e6786eb7-a274-4c8f-9a44-fd753000824e)
 
 ## Output ScreenShot
+![Screenshot (97)](https://github.com/divyaansh0105/BooleanUsingPolygonClipping/assets/158052399/62792b94-8b94-48a8-a399-f532aa1cde7a)
