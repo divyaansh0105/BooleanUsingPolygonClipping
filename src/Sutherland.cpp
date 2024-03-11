@@ -3,8 +3,6 @@
 #include <vector>
 #include "SutherLand.h"
 
-
-
 // Sutherland-Hodgman algorithm for polygon clipping against a fixed polygon
 
 void  SutherLand::clipPolygonAgainstFixed(std::vector<Point2D>& subjectPolygon, std::vector<Point2D>& clipPolygon, std::vector<Point2D>& answer)

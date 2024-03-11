@@ -8,6 +8,7 @@
 #include "STLReader.h"
 #include "STLWriter.h"
 #include "SutherLand.h"
+#include "Surface.h"
 
 using namespace std;
 
@@ -72,95 +73,6 @@ double BooleanOperations::minZValue(std::vector<Point3D>& face)
     return minWidth;
 }
 
-bool BooleanOperations:: isEqual(Point3D P1 , Point3D P2)
-{  
-    bool result ;
- 
-    result = ((P1.x()==P2.x()) && (P1.y()==P2.y()) && (P1.z()==P2.z()));
-   
-    return result;
-} 
- 
-void BooleanOperations::getPolygonSurface(Triangulation& triangulation,vector<Point3D>& surfacePoint)
-{
-    std::vector<Point3D>& points = triangulation.uniquePoints();
-    std::vector<Triangle>& triangles = triangulation.triangles();
-    std::vector<Point3D>& normals = triangulation.uniqueNormals();
-   
-    int targetNormalIndex ;
-   
-    // Find unique normal indices
-    for (const Triangle& triangle : triangles)
-    {   
-        Point3D checkNormal;
-        checkNormal = normals[triangle.normalIndex()];
-        
-        //if the normal is on z axis then extract the normal to get 2d surfaces
-        if(checkNormal.z() !=0)
-        {
-           targetNormalIndex = triangle.normalIndex() ;
-        }
-    }
-
-    std::vector<int> triangleIndices;
-    std::vector<Point3D> seenIndices;
-    int count = 0 ;
-    for (const Triangle& triangle : triangles)
-    {  
-        //check for the target noraml
-        int normalIndex = triangle.normalIndex();
-        if(targetNormalIndex == normalIndex  )
-        { 
-         if(seenIndices.size()==0)
-         {  
-           
-            seenIndices.push_back(points[triangle.v1()]);
-            seenIndices.push_back(points[triangle.v2()]);
-            seenIndices.push_back(points[triangle.v3()]);        
-         }
-         else
-         {   
-           vector<Point3D> trianglePoints;
-           Point3D newPoint1  = points[triangle.v1()];
-           Point3D newPoint2  = points[triangle.v2()];
-           Point3D newPoint3  = points[triangle.v3()];
-           trianglePoints.push_back(newPoint1);
-           trianglePoints.push_back(newPoint2);
-           trianglePoints.push_back(newPoint3);
-         
-            for(auto it : trianglePoints)
-            {
-                bool flag = false ;
-                for(auto jt : seenIndices)
-                {
-                    if(isEqual(it,jt))
-                    {
-                      flag = true ;
-                      break;    
-                    }
-                    else
-                    {
-                       
-                    }
-                }
- 
-                if(flag==false)
-                {
-                   seenIndices.push_back(it);
-                       
-                }
-               
-            }
-         }
-                         
-        }
-    }
-   for(auto element : seenIndices)
-    {
-        surfacePoint.push_back(element);
-    }
-}
-
  vector<Point2D> BooleanOperations:: getClippingSurface(vector<Point3D> surface)
   {
     std::vector<Point2D>currentSurface;
@@ -172,8 +84,6 @@ void BooleanOperations::getPolygonSurface(Triangulation& triangulation,vector<Po
     return currentSurface;
   }
 
-
- 
 
 void BooleanOperations::get2DPolygons(vector<Point3D>& Clipper,vector<Point3D>& Clipped,double z,vector<Point3D>& answer )
 {   
@@ -216,7 +126,8 @@ vector<Point3D> BooleanOperations::getIntersection(Triangulation& T1, Triangulat
     startT1 = minZValue(pointsT1); endT1 = maxZValue(pointsT1);
     startT2 = minZValue(pointsT2); endT2 = maxZValue(pointsT2);
 
-    double sliceinterval = objectWidth(pointsT1)/10000;
+    double sliceinterval = objectWidth(pointsT1)/1000;
+    Surface surface;
   
     //Creating a vector of resultant surfaces
     vector<Point3D> answer;
@@ -231,8 +142,8 @@ vector<Point3D> BooleanOperations::getIntersection(Triangulation& T1, Triangulat
                     //if both slices are in same plane then clip 
                     vector<Point3D> clipper ;
                     vector<Point3D> clipped ;
-                    getPolygonSurface(T1,clipper);
-                    getPolygonSurface(T2,clipped);          
+                    surface.getPolygonSurface(T1,clipper);
+                    surface.getPolygonSurface(T2,clipped);          
                     double z = i ;
                     get2DPolygons(clipper,clipped,z,answer);   
                 }           
@@ -240,6 +151,4 @@ vector<Point3D> BooleanOperations::getIntersection(Triangulation& T1, Triangulat
     }
 //  Clipped output
 return answer;
-
-
 }
