@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "../headers/STLWriter.h"
-#include "../headers/Triangle.h"
+#include "STLWriter.h"
+#include "Triangle.h"
 #include <fstream>
 #include <stdexcept>
 #include <iostream>

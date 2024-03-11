@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../headers/Triangle.h"
+#include "Triangle.h"
 
 Triangle::Triangle(int inV1, int inV2, int inV3)
 {

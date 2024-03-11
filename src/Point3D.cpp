@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../headers/Point3D.h"
+#include "Point3D.h"
 
  Point3D::Point3D() : mX(0), mY(0), mZ(0) {}
 

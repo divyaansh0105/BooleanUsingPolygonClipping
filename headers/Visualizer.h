@@ -10,7 +10,7 @@
 
 #include "STLWriter.h"
 
-#include "Clipping.h"
+
 class OpenGLWindow;
 
 class Visualizer : public QMainWindow
@@ -39,8 +39,6 @@ private:
 
     QPushButton* mPushButton2;
 
-    QPushButton* mPushButton3;
-
     QCheckBox* mButtonforLeft;
 
     QCheckBox* mButtonforRight;
@@ -54,17 +52,6 @@ private:
     string mFilePath1;
     string mFilePath2;
 
-private:
-
-    Triangulation triangulation1;
-    STLReader reader1;
-    STLWriter writer1;
-
-    Triangulation triangulation2;
-    STLReader reader2;
-    STLWriter writer2;
-
-    Clipping intersectedPart;
 
 private:
 
