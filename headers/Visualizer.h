@@ -74,7 +74,7 @@ private:
 
     void DisplayLeftPart();
 
-    void DisplayRightPart( );
+    void DisplayRightPart();
 
     void DisplayIntersectedPart();
 

@@ -26,11 +26,12 @@ public:
     void showIntersectedPart(std::string& filepath1, string& filepath2);
     void clearData1();
     void clearData2();
-    
+    void clearData3();
+
 protected:
     void paintGL() override;
     void initializeGL() override;
-   
+
 
 private:
     void reset();
@@ -49,9 +50,9 @@ private:
     QOpenGLShader* mFshader = nullptr;
     QOpenGLShaderProgram* mProgram = nullptr;
 
-    vector<Point3D> answer1;
-    vector<Point3D> answer2;
-    vector<Point3D>commonArea;
+    vector<Point3D> coordinatesOfFirstStl;
+    vector<Point3D> coordinatesOfSecondStl;
+    vector<Point3D>coordinatesOfIntersectedArea;
 
     QMatrix4x4 m_projectionMatrix;
     QMatrix4x4 m_viewMatrix;
@@ -62,7 +63,7 @@ private:
 
     int m_frame;
 
- 
+
     QList<QVector3D> mVertices;
     QList<QVector3D> mNormals;
     QOpenGLBuffer mVbo;
