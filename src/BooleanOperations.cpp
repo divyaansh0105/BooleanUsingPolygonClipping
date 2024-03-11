@@ -7,7 +7,7 @@
 #include "Point3D.h"
 #include "STLReader.h"
 #include "STLWriter.h"
-#include "SutherLand.h"
+#include "ClippingAlgorithm.h"
 #include "Surface.h"
 
 using namespace std;
@@ -76,9 +76,9 @@ double BooleanOperations::minZValue(std::vector<Point3D>& face)
  vector<Point2D> BooleanOperations:: getClippingSurface(vector<Point3D> surface)
   {
     std::vector<Point2D>currentSurface;
-    for(auto it : surface)
+    for(auto iterator : surface)
     {  
-        Point2D  newpoint(it.x(),it.y());
+        Point2D  newpoint(iterator.x(), iterator.y());
         currentSurface.push_back(newpoint);
     }
     return currentSurface;
@@ -96,8 +96,8 @@ void BooleanOperations::get2DPolygons(vector<Point3D>& Clipper,vector<Point3D>& 
     subjectSurface = getClippingSurface(Clipped);
   
     //call for suther land algorithm
-    SutherLand sutherland; 
-    sutherland.clipPolygonAgainstFixed(subjectSurface, clipperSurface, clippedSurface);
+    ClippingAlgorithm sutherland; 
+    sutherland.clip(subjectSurface, clipperSurface, clippedSurface);
 
     //pushing the clipped polygon output into answer array
     for(auto it:clippedSurface)
