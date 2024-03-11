@@ -168,27 +168,6 @@ void  getPolygonSurface(Triangulation& triangulation,vector<Point3D>& surfacePoi
     return currentSurface;
   }
 
-double crossProduct( Point2D a,  Point2D b) 
-{
-    return a.x() * b.y() - a.y() * b.x();
-}
- 
-// Helper function to check if a point is inside the given polygon
-bool isInside( Point2D& point, vector<Point2D>& polygon) 
-{   
-    size_t count = 0;
-    for (size_t i = 0; i < polygon.size(); ++i) {
-        size_t nextIndex = (i + 1) % polygon.size();
-        Point2D& current = polygon[i];
-        Point2D& next = polygon[nextIndex];
-        if ((current.y() <=  point.y() && point.y() < next.y()) || (next.y() <= point.y() && point.y() < current.y())) {
-            if (point.x() < (next.x() - current.x()) * (point.y() - current.y()) / (next.y() - current.y()) + current.x()) {
-                count++;
-            }
-        }
-    }
-    return count % 2 == 1;
-}
  
 // Helper function to calculate the intersection point of two lines
 Point2D intersection( Point2D& p1,  Point2D& p2,  Point2D& q1,  Point2D& q2)
@@ -285,6 +264,7 @@ vector<Point3D> Clipping::clip(Triangulation& T1, Triangulation& T2, string& fil
     double startT1,endT1,startT2,endT2;
     startT1 = minzval(pointsT1); endT1 = maxzval(pointsT1);
     startT2 = minzval(pointsT2); endT2 = maxzval(pointsT2);
+
 
     double sliceinterval = SurfacWidth(pointsT1)/100;
   
