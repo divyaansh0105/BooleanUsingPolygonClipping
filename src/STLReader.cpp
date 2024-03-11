@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "../headers/STLReader.h"
+#include "STLReader.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>

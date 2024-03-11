@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../headers/Point2D.h"
+#include "Point2D.h"
  
 // Comparison operators
 bool Point2D::operator<(const Point2D& other) const 

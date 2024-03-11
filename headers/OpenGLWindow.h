@@ -21,12 +21,14 @@ public:
 
 public:
     void setData(const std::vector<Point3D>& vertices);
-    void showData1(std::string& filepath);
-    void showData2(std::string& filepath);
+    void showDataOfFirstStl(std::string& filepath);
+    void showDataOfSecondStl(std::string& filepath);
     void showIntersectedPart(std::string& filepath1, string& filepath2);
-    void clearData1();
-    void clearData2();
-    void clearData3();
+    void clearDataOfFirstStl();
+    void clearDataOfSecondStl();
+    void clearDataOfIntersectedArea();
+
+    vector<GLfloat> writeFirstStlIntoVertices();
 
 protected:
     void paintGL() override;

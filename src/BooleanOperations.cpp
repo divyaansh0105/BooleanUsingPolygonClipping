@@ -3,24 +3,25 @@
 #include <iostream>
 #include <set>
 
+#include "BooleanOperations.h"
 #include "Point3D.h"
-#include "Clipping.h"
 #include "STLReader.h"
-#include "../headers/STLWriter.h"
+#include "STLWriter.h"
+#include "SutherLand.h"
 
 using namespace std;
 
-Clipping::Clipping()
+BooleanOperations::BooleanOperations()
 {
 
 }
 
-Clipping::~Clipping()
+BooleanOperations::~BooleanOperations()
 {
     
 }
 
-double Clipping::SurfacWidth(std::vector<Point3D>& face)
+double BooleanOperations::objectWidth(std::vector<Point3D>& face)
 {  
     double minWidth = INT_MAX;
     double maxWidth = INT_MIN;  
@@ -45,7 +46,7 @@ double Clipping::SurfacWidth(std::vector<Point3D>& face)
     }
 }
 
-double Clipping::maxzval(std::vector<Point3D>& face)
+double BooleanOperations::maxZValue(std::vector<Point3D>& face)
 {
     double maxWidth = INT_MIN;  
     for(auto it:face)
@@ -58,7 +59,7 @@ double Clipping::maxzval(std::vector<Point3D>& face)
     return maxWidth;
 }
 
-double Clipping::minzval(std::vector<Point3D>& face)
+double BooleanOperations::minZValue(std::vector<Point3D>& face)
 {
     double minWidth = INT_MAX;  
     for(auto it:face)
@@ -71,7 +72,7 @@ double Clipping::minzval(std::vector<Point3D>& face)
     return minWidth;
 }
 
-bool isequal(Point3D P1 , Point3D P2)
+bool BooleanOperations:: isEqual(Point3D P1 , Point3D P2)
 {  
     bool result ;
  
@@ -80,7 +81,7 @@ bool isequal(Point3D P1 , Point3D P2)
     return result;
 } 
  
-void  getPolygonSurface(Triangulation& triangulation,vector<Point3D>& surfacePoint)
+void BooleanOperations::getPolygonSurface(Triangulation& triangulation,vector<Point3D>& surfacePoint)
 {
     std::vector<Point3D>& points = triangulation.uniquePoints();
     std::vector<Triangle>& triangles = triangulation.triangles();
@@ -93,6 +94,8 @@ void  getPolygonSurface(Triangulation& triangulation,vector<Point3D>& surfacePoi
     {   
         Point3D checkNormal;
         checkNormal = normals[triangle.normalIndex()];
+        
+        //if the normal is on z axis then extract the normal to get 2d surfaces
         if(checkNormal.z() !=0)
         {
            targetNormalIndex = triangle.normalIndex() ;
@@ -104,6 +107,7 @@ void  getPolygonSurface(Triangulation& triangulation,vector<Point3D>& surfacePoi
     int count = 0 ;
     for (const Triangle& triangle : triangles)
     {  
+        //check for the target noraml
         int normalIndex = triangle.normalIndex();
         if(targetNormalIndex == normalIndex  )
         { 
@@ -129,7 +133,7 @@ void  getPolygonSurface(Triangulation& triangulation,vector<Point3D>& surfacePoi
                 bool flag = false ;
                 for(auto jt : seenIndices)
                 {
-                    if(isequal(it,jt))
+                    if(isEqual(it,jt))
                     {
                       flag = true ;
                       break;    
@@ -157,7 +161,7 @@ void  getPolygonSurface(Triangulation& triangulation,vector<Point3D>& surfacePoi
     }
 }
 
- vector<Point2D> Clipping:: getClippingSurface(vector<Point3D> surface)
+ vector<Point2D> BooleanOperations:: getClippingSurface(vector<Point3D> surface)
   {
     std::vector<Point2D>currentSurface;
     for(auto it : surface)
@@ -168,86 +172,10 @@ void  getPolygonSurface(Triangulation& triangulation,vector<Point3D>& surfacePoi
     return currentSurface;
   }
 
-double crossProduct( Point2D a,  Point2D b) 
-{
-    return a.x() * b.y() - a.y() * b.x();
-}
- 
-// Helper function to check if a point is inside the given polygon
-bool isInside( Point2D& point, vector<Point2D>& polygon) 
-{   
-    size_t count = 0;
-    for (size_t i = 0; i < polygon.size(); ++i) {
-        size_t nextIndex = (i + 1) % polygon.size();
-        Point2D& current = polygon[i];
-        Point2D& next = polygon[nextIndex];
-        if ((current.y() <=  point.y() && point.y() < next.y()) || (next.y() <= point.y() && point.y() < current.y())) {
-            if (point.x() < (next.x() - current.x()) * (point.y() - current.y()) / (next.y() - current.y()) + current.x()) {
-                count++;
-            }
-        }
-    }
-    return count % 2 == 1;
-}
- 
-// Helper function to calculate the intersection point of two lines
-Point2D intersection( Point2D& p1,  Point2D& p2,  Point2D& q1,  Point2D& q2)
-{  
-    double x1 = p1.x(), y1 = p1.y();
-    double x2 = p2.x(), y2 = p2.y();
-    double x3 = q1.x(), y3 = q1.y();
-    double x4 = q2.x(), y4 = q2.y();
- 
-    double denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-    double x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
-    double y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
-    
-    Point2D point(x,y);
-    return point;
-}
- 
-// Sutherland-Hodgman algorithm for polygon clipping against a fixed polygon
-void clipPolygonAgainstFixed(vector<Point2D>& subjectPolygon,  vector<Point2D>& clipPolygon,vector<Point2D>& answer) 
-{   
-    
-    vector<Point2D> output = subjectPolygon;
-    for (int i = 0; i < clipPolygon.size(); ++i) 
-    {
-        int k = (i + 1) % clipPolygon.size();
-        vector<Point2D> input = output;
-        output.clear();
- 
-        for (int j = 0; j < input.size(); ++j) 
-        {
-            Point2D p1 = input[j];
-            Point2D p2 = input[(j + 1) % input.size()];
-           
-            // Check if p1 is inside or outside the clip polygon
-            bool p1Inside = (p1.x() - clipPolygon[i].x()) * (clipPolygon[k].y() - clipPolygon[i].y()) -
-                            (p1.y() - clipPolygon[i].y()) * (clipPolygon[k].x() - clipPolygon[i].x()) <= 0;
-            if (p1Inside) 
-            {
-                output.push_back(p1);
-            }
- 
-            // Check for intersection and add the intersection point
-            if ((p1.x() - clipPolygon[i].x()) * (p2.x() - clipPolygon[i].x()) < 0 ||
-                (p1.y() - clipPolygon[i].y()) * (p2.y() - clipPolygon[i].y()) < 0) 
-            {   
-                Point2D intersectionPoint = intersection(clipPolygon[i], clipPolygon[k], p1, p2);
-                output.push_back(intersectionPoint);
-            }
-        }
-    }
 
-   for(auto it : output)
-   {
-    answer.push_back(it);
-    
-   }
-}
+ 
 
-void Clipping::sutherland(vector<Point3D>& Clipper,vector<Point3D>& Clipped,double z,vector<Point3D>& answer  )
+void BooleanOperations::get2DPolygons(vector<Point3D>& Clipper,vector<Point3D>& Clipped,double z,vector<Point3D>& answer )
 {   
    //Creating vector of 2d points for polygon clipping
     vector<Point2D>clipperSurface;
@@ -257,7 +185,9 @@ void Clipping::sutherland(vector<Point3D>& Clipper,vector<Point3D>& Clipped,doub
     clipperSurface = getClippingSurface(Clipper);
     subjectSurface = getClippingSurface(Clipped);
   
-    clipPolygonAgainstFixed(subjectSurface, clipperSurface,clippedSurface);
+    //call for suther land algorithm
+    SutherLand sutherland; 
+    sutherland.clipPolygonAgainstFixed(subjectSurface, clipperSurface, clippedSurface);
 
     //pushing the clipped polygon output into answer array
     for(auto it:clippedSurface)
@@ -267,7 +197,7 @@ void Clipping::sutherland(vector<Point3D>& Clipper,vector<Point3D>& Clipped,doub
     }
 }
 
-vector<Point3D> Clipping::clip(Triangulation& T1, Triangulation& T2, string& filePath1, string& filePath2)
+vector<Point3D> BooleanOperations::getIntersection(Triangulation& T1, Triangulation& T2, string& filePath1, string& filePath2)
 {   
    STLReader Reader;
    
@@ -283,10 +213,10 @@ vector<Point3D> Clipping::clip(Triangulation& T1, Triangulation& T2, string& fil
 
     // storing the start and end points of both stl files based on z axis 
     double startT1,endT1,startT2,endT2;
-    startT1 = minzval(pointsT1); endT1 = maxzval(pointsT1);
-    startT2 = minzval(pointsT2); endT2 = maxzval(pointsT2);
+    startT1 = minZValue(pointsT1); endT1 = maxZValue(pointsT1);
+    startT2 = minZValue(pointsT2); endT2 = maxZValue(pointsT2);
 
-    double sliceinterval = SurfacWidth(pointsT1)/100;
+    double sliceinterval = objectWidth(pointsT1)/10000;
   
     //Creating a vector of resultant surfaces
     vector<Point3D> answer;
@@ -304,7 +234,7 @@ vector<Point3D> Clipping::clip(Triangulation& T1, Triangulation& T2, string& fil
                     getPolygonSurface(T1,clipper);
                     getPolygonSurface(T2,clipped);          
                     double z = i ;
-                    sutherland(clipper,clipped,z,answer);   
+                    get2DPolygons(clipper,clipped,z,answer);   
                 }           
         }
     }

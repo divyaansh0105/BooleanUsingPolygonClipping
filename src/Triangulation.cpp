@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../headers/Triangulation.h"
+#include "Triangulation.h"
 #include <map>
 #include <vector>
 #include <iostream>

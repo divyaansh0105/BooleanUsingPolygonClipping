@@ -2,9 +2,10 @@
 #include <QString>
 #include "stdafx.h"
 
-#include "Visualizer.h"
 
 #include "OpenGLWindow.h"
+#include "Visualizer.h"
+
 
 Visualizer::Visualizer(QWindow* parent) : QMainWindow(nullptr)
 {
@@ -65,7 +66,7 @@ void Visualizer::setupUi()
 
     setCentralWidget(mWidget);
 
-    setWindowTitle(QCoreApplication::translate("Visualiser", "Visualiser", nullptr));
+    setWindowTitle(QCoreApplication::translate("BooleanUsingPolygonClipping", "BooleanUsingPolygonClipping", nullptr));
 }
 
 void Visualizer::openFileDialog1()
@@ -86,11 +87,11 @@ void Visualizer::DisplayLeftPart()
         if (mFilePath1.empty()) {
             openFileDialog1();
         }
-        mRenderer->showData1(mFilePath1);
+        mRenderer->showDataOfFirstStl(mFilePath1);
         update();
     }
     else {
-        mRenderer->clearData1(); // Clear the rendering data
+        mRenderer->clearDataOfFirstStl(); // Clear the rendering data
         update();
     }
 }
@@ -101,11 +102,11 @@ void Visualizer::DisplayRightPart()
         if (mFilePath2.empty()) {
             openFileDialog2();
         }
-        mRenderer->showData2(mFilePath2);
+        mRenderer->showDataOfSecondStl(mFilePath2);
         update();
     }
     else {
-        mRenderer->clearData2(); // Clear the rendering data
+        mRenderer->clearDataOfSecondStl(); // Clear the rendering data
         update();
     }
 }
@@ -123,7 +124,7 @@ void Visualizer::DisplayIntersectedPart()
     }
     else {
         // If the intersected part button is unchecked, clear the rendering data for file 2
-        mRenderer->clearData3();
+        mRenderer->clearDataOfIntersectedArea();
         update(); // Trigger repaint
     }
 }
