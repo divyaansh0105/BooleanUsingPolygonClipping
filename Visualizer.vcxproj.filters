@@ -58,7 +58,7 @@
     <ClCompile Include="src\Sutherland.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Container.cpp">
+    <ClCompile Include="src\Surface.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,7 +98,7 @@
     <ClInclude Include="headers\SutherLand.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Container.h">
+    <ClInclude Include="headers\Surface.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

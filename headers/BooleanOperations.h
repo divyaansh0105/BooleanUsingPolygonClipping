@@ -17,8 +17,6 @@ class BooleanOperations
              double objectWidth(std::vector<Point3D>& face);
              double minZValue(std::vector<Point3D>& face);
              double maxZValue(std::vector<Point3D>& face);
-             bool isEqual(Point3D P1, Point3D P2);
-             void getPolygonSurface(Triangulation& triangulation, vector<Point3D>& surfacePoint);
             
              void get2DPolygons(vector<Point3D>& Clipper, vector<Point3D>& Clipped, double z, vector<Point3D>& answer);
              vector<Point3D> getIntersection(Triangulation& T1, Triangulation& T2, string& filePath1, string& filePath2);
