@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
 #include <vector>
-#include "SutherLand.h"
+#include "ClippingAlgorithm.h"
 
 // Sutherland-Hodgman algorithm for polygon clipping against a fixed polygon
 
-void  SutherLand::clipPolygonAgainstFixed(std::vector<Point2D>& subjectPolygon, std::vector<Point2D>& clipPolygon, std::vector<Point2D>& answer)
+void  ClippingAlgorithm::clip(std::vector<Point2D>& subjectPolygon, std::vector<Point2D>& clipPolygon, std::vector<Point2D>& answer)
 {
     std::vector<Point2D> output = subjectPolygon;
     for (int i = 0; i < clipPolygon.size(); ++i)
@@ -46,7 +46,7 @@ void  SutherLand::clipPolygonAgainstFixed(std::vector<Point2D>& subjectPolygon, 
 
 
 // Helper function to calculate the intersection point of two lines
-Point2D SutherLand::intersection(Point2D& p1, Point2D& p2, Point2D& q1, Point2D& q2)
+Point2D ClippingAlgorithm::intersection(Point2D& p1, Point2D& p2, Point2D& q1, Point2D& q2)
 {
     double x1 = p1.x(), y1 = p1.y();
     double x2 = p2.x(), y2 = p2.y();
