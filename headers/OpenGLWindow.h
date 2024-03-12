@@ -26,10 +26,13 @@ public:
     void showIntersectedPart(std::string& filepath1, string& filepath2);
     void clearDataOfFirstStl();
     void clearDataOfSecondStl();
-    void clearDataOfIntersectedArea();
-
-    vector<GLfloat> writeFirstStlIntoVertices();
-
+    void clearDataOfIntersectedArea(); 
+    vector<GLfloat> verticesOfFirstStl();
+    vector<GLfloat> verticesOfSecondStl();
+    vector<GLfloat>verticesOfIntersectedPart();
+    vector<GLfloat>colorOfFirstStl();
+    vector<GLfloat>colorOfSecondStl();
+    vector<GLfloat>colorOfIntersectedArea();
 protected:
     void paintGL() override;
     void initializeGL() override;
