@@ -110,7 +110,7 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Clipping.cpp" />
+    <ClCompile Include="src\BooleanOperations.cpp" />
     <ClCompile Include="src\OpenGLWindow.cpp" />
     <ClCompile Include="src\Point2D.cpp" />
     <ClCompile Include="src\Point3D.cpp" />
@@ -120,6 +120,8 @@
     </ClCompile>
     <ClCompile Include="src\STLReader.cpp" />
     <ClCompile Include="src\STLWriter.cpp" />
+    <ClCompile Include="src\Surface.cpp" />
+    <ClCompile Include="src\Sutherland.cpp" />
     <ClCompile Include="src\Triangle.cpp" />
     <ClCompile Include="src\Triangulation.cpp" />
     <ClCompile Include="src\Visualizer.cpp" />
@@ -134,12 +136,14 @@
     <QtMoc Include="headers\OpenGLWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="headers\Clipping.h" />
+    <ClInclude Include="headers\BooleanOperations.h" />
     <ClInclude Include="headers\Point2D.h" />
     <ClInclude Include="headers\Point3D.h" />
     <ClInclude Include="headers\stdafx.h" />
     <ClInclude Include="headers\STLReader.h" />
     <ClInclude Include="headers\STLWriter.h" />
+    <ClInclude Include="headers\Surface.h" />
+    <ClInclude Include="headers\SutherLand.h" />
     <ClInclude Include="headers\Triangle.h" />
     <ClInclude Include="headers\Triangulation.h" />
     <QtMoc Include="headers\Visualizer.h" />

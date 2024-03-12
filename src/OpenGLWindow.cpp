@@ -6,11 +6,11 @@
 #include <QOpenGLShaderProgram>
 #include <QPainter>
 #include <iostream>
-#include "../headers/Triangulation.h"
-#include "../headers/STLWriter.h"
-#include "../headers/Point3D.h"
-#include "../headers/STLReader.h"
-#include "../headers/Clipping.h"
+#include "Triangulation.h"
+#include "STLWriter.h"
+#include "Point3D.h"
+#include "STLReader.h"
+#include "BooleanOperations.h"
 
 OpenGLWindow::OpenGLWindow(const QColor& background, QMainWindow* parent) :
     mBackground(background)
@@ -69,26 +69,20 @@ void OpenGLWindow::paintGL()
 
     // Render the first STL file (answer1)
     if (!coordinatesOfFirstStl.empty()) {
-        GLfloat* vertices1 = new GLfloat[coordinatesOfFirstStl.size() * 3 * 6];
-        GLfloat* color1 = new GLfloat[coordinatesOfFirstStl.size() * 4 * 6];
-
+        GLfloat* vertices1 = new GLfloat[coordinatesOfFirstStl.size() * 3 ];
+        GLfloat* color1 = new GLfloat[coordinatesOfFirstStl.size() * 4 ];
         int j = 0;
-        int k = 0;
-        for (int i = 0; i < coordinatesOfFirstStl.size(); i += 3) {
-            for (int v = 0; v < 3; ++v) {
-                vertices1[j++] = coordinatesOfFirstStl[i + v].x();
-                vertices1[j++] = coordinatesOfFirstStl[i + v].y();
-                vertices1[j++] = coordinatesOfFirstStl[i + v].z();
-            }
-
-            for (int v = 0; v < 3; ++v) {
-                color1[k++] = 1.0f; // Red component
-                color1[k++] = 0.0f; // Green component
-                color1[k++] = 0.0f; // Blue component
-                color1[k++] = 0.3f; // Alpha component
-            }
+        for (int i = 0; i < coordinatesOfFirstStl.size(); i++) {
+            vertices1[j++] = coordinatesOfFirstStl[i].x();
+            vertices1[j++] = coordinatesOfFirstStl[i].y();
+            vertices1[j++] = coordinatesOfFirstStl[i].z();
         }
-
+        for (int i = 0; i < coordinatesOfFirstStl.size() * 4; i += 4) {
+            color1[i] = 0.0f;   // Red component
+            color1[i + 1] = 1.0f; // Green component
+            color1[i + 2] = 1.0f; // Blue component
+            color1[i + 3] = 0.3f; // Alpha component
+        }
         // Set up blending for transparency
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -100,7 +94,7 @@ void OpenGLWindow::paintGL()
         glEnableVertexAttribArray(m_colAttr);
 
         glLineWidth(5.0);
-        glDrawArrays(GL_TRIANGLES, 0, coordinatesOfFirstStl.size() * 2); // Multiply by 2 to render both front and back faces
+        glDrawArrays(GL_TRIANGLES, 0, coordinatesOfFirstStl.size() ); // Multiply by 2 to render both front and back faces
 
         glDisableVertexAttribArray(m_colAttr);
         glDisableVertexAttribArray(m_posAttr);
@@ -113,7 +107,6 @@ void OpenGLWindow::paintGL()
     if (!coordinatesOfSecondStl.empty()) {
         GLfloat* vertices2 = new GLfloat[coordinatesOfSecondStl.size() * 3];
         GLfloat* color2 = new GLfloat[coordinatesOfSecondStl.size() * 4];
-
         int k = 0;
         for (int i = 0; i < coordinatesOfSecondStl.size(); i++) {
             vertices2[k++] = coordinatesOfSecondStl[i].x();
@@ -126,7 +119,6 @@ void OpenGLWindow::paintGL()
             color2[i + 2] = 1.0f; // Blue component
             color2[i + 3] = 0.3f; // Alpha component
         }
-
         glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vertices2);
         glVertexAttribPointer(m_colAttr, 4, GL_FLOAT, GL_FALSE, 0, color2);
 
@@ -147,21 +139,18 @@ void OpenGLWindow::paintGL()
     if (!coordinatesOfIntersectedArea.empty()) {
         GLfloat* vertices3 = new GLfloat[coordinatesOfIntersectedArea.size() * 3];
         GLfloat* color3 = new GLfloat[coordinatesOfIntersectedArea.size() * 4];
-
         int l = 0;
         for (int i = 0; i < coordinatesOfIntersectedArea.size(); ++i) {
             vertices3[l++] = coordinatesOfIntersectedArea[i].x();
             vertices3[l++] = coordinatesOfIntersectedArea[i].y();
             vertices3[l++] = coordinatesOfIntersectedArea[i].z();
         }
-
         for (int i = 0; i < coordinatesOfIntersectedArea.size() * 4; i += 4) {
             color3[i] = 0.0f;   // Red component
             color3[i + 1] = 1.0f; // Green component 
             color3[i + 2] = 0.0f; // Blue component
             color3[i + 3] = 0.7f; // Alpha component 
         }
-
         glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vertices3);
         glVertexAttribPointer(m_colAttr, 4, GL_FLOAT, GL_FALSE, 0, color3);
 
@@ -220,7 +209,7 @@ void OpenGLWindow::initializeGL()
     glEnable(GL_DEPTH_TEST);
 }
 
-void OpenGLWindow::showData1(std::string& filepath)
+void OpenGLWindow::showDataOfFirstStl(std::string& filepath)
 {
     Triangulation triangulation1;
     STLReader reader1;
@@ -233,7 +222,7 @@ void OpenGLWindow::showData1(std::string& filepath)
     update();
 
 }
-void OpenGLWindow::showData2(std::string& filepath)
+void OpenGLWindow::showDataOfSecondStl(std::string& filepath)
 {
     Triangulation triangulation2;
     STLReader reader2;
@@ -251,28 +240,29 @@ void OpenGLWindow::showIntersectedPart(std::string& filepath1, string& filepath2
     Triangulation triangulation1;
     Triangulation triangulation2;
 
-    Clipping intersectedPortion;
+    BooleanOperations intersectedPortion;
 
-    coordinatesOfIntersectedArea = intersectedPortion.clip(triangulation1, triangulation2, filepath1, filepath2);
+    coordinatesOfIntersectedArea = intersectedPortion.getIntersection(triangulation1, triangulation2, filepath1, filepath2);
 
     setData(coordinatesOfIntersectedArea);
     update();
 }
 
-void OpenGLWindow::clearData1()
+
+void OpenGLWindow::clearDataOfFirstStl()
 {
     // Clear rendering data for the first STL file
     coordinatesOfFirstStl.clear();
     update(); // Trigger repaint
 }
 
-void OpenGLWindow::clearData2()
+void OpenGLWindow::clearDataOfSecondStl()
 {
     // Clear rendering data for the second STL file
     coordinatesOfSecondStl.clear();
     update(); // Trigger repaint
 }
-void OpenGLWindow::clearData3()
+void OpenGLWindow::clearDataOfIntersectedArea()
 {
     coordinatesOfIntersectedArea.clear();
     update();
@@ -316,6 +306,7 @@ void OpenGLWindow::zoomOut()
     scaleFactor /= 1.1f;
     update();
 }
+
 
 
 
