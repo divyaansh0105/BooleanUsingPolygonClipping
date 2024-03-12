@@ -69,26 +69,20 @@ void OpenGLWindow::paintGL()
 
     // Render the first STL file (answer1)
     if (!coordinatesOfFirstStl.empty()) {
-        GLfloat* vertices1 = new GLfloat[coordinatesOfFirstStl.size() * 3 ];
-        GLfloat* color1 = new GLfloat[coordinatesOfFirstStl.size() * 4 ];
-        int j = 0;
-        for (int i = 0; i < coordinatesOfFirstStl.size(); i++) {
-            vertices1[j++] = coordinatesOfFirstStl[i].x();
-            vertices1[j++] = coordinatesOfFirstStl[i].y();
-            vertices1[j++] = coordinatesOfFirstStl[i].z();
-        }
-        for (int i = 0; i < coordinatesOfFirstStl.size() * 4; i += 4) {
-            color1[i] = 0.0f;   // Red component
-            color1[i + 1] = 1.0f; // Green component
-            color1[i + 2] = 1.0f; // Blue component
-            color1[i + 3] = 0.3f; // Alpha component
-        }
+        
+       
+        vector<GLfloat> verticesOfStl1;
+        verticesOfStl1 = verticesOfFirstStl();
+
+        vector<GLfloat>colorOfFirstStl1;
+        colorOfFirstStl1 = colorOfFirstStl();
+
         // Set up blending for transparency
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vertices1);
-        glVertexAttribPointer(m_colAttr, 4, GL_FLOAT, GL_FALSE, 0, color1);
+        glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, verticesOfStl1.data());
+        glVertexAttribPointer(m_colAttr, 4, GL_FLOAT, GL_FALSE, 0, colorOfFirstStl1.data());
 
         glEnableVertexAttribArray(m_posAttr);
         glEnableVertexAttribArray(m_colAttr);
@@ -99,28 +93,22 @@ void OpenGLWindow::paintGL()
         glDisableVertexAttribArray(m_colAttr);
         glDisableVertexAttribArray(m_posAttr);
 
-        delete[] vertices1;
-        delete[] color1;
+        verticesOfStl1.clear();
+        colorOfFirstStl1.clear();
     }
 
     // Render the second STL file (answer2)
     if (!coordinatesOfSecondStl.empty()) {
-        GLfloat* vertices2 = new GLfloat[coordinatesOfSecondStl.size() * 3];
-        GLfloat* color2 = new GLfloat[coordinatesOfSecondStl.size() * 4];
-        int k = 0;
-        for (int i = 0; i < coordinatesOfSecondStl.size(); i++) {
-            vertices2[k++] = coordinatesOfSecondStl[i].x();
-            vertices2[k++] = coordinatesOfSecondStl[i].y();
-            vertices2[k++] = coordinatesOfSecondStl[i].z();
-        }
-        for (int i = 0; i < coordinatesOfSecondStl.size() * 4; i += 4) {
-            color2[i] = 0.0f;   // Red component
-            color2[i + 1] = 0.0f; // Green component
-            color2[i + 2] = 1.0f; // Blue component
-            color2[i + 3] = 0.3f; // Alpha component
-        }
-        glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vertices2);
-        glVertexAttribPointer(m_colAttr, 4, GL_FLOAT, GL_FALSE, 0, color2);
+       
+      
+        vector<GLfloat> verticesOfStl2;
+        verticesOfStl2 = verticesOfSecondStl();
+
+       vector<GLfloat> colorOfSecondStl2;
+       colorOfSecondStl2 = colorOfSecondStl();
+       
+        glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, verticesOfStl2.data());
+        glVertexAttribPointer(m_colAttr, 4, GL_FLOAT, GL_FALSE, 0, colorOfSecondStl2.data());
 
         glEnableVertexAttribArray(m_posAttr);
         glEnableVertexAttribArray(m_colAttr);
@@ -131,28 +119,22 @@ void OpenGLWindow::paintGL()
         glDisableVertexAttribArray(m_colAttr);
         glDisableVertexAttribArray(m_posAttr);
 
-        delete[] vertices2;
-        delete[] color2;
+        verticesOfStl2.clear();
+        colorOfSecondStl2.clear();
     }
 
     // Render the common area
     if (!coordinatesOfIntersectedArea.empty()) {
-        GLfloat* vertices3 = new GLfloat[coordinatesOfIntersectedArea.size() * 3];
-        GLfloat* color3 = new GLfloat[coordinatesOfIntersectedArea.size() * 4];
-        int l = 0;
-        for (int i = 0; i < coordinatesOfIntersectedArea.size(); ++i) {
-            vertices3[l++] = coordinatesOfIntersectedArea[i].x();
-            vertices3[l++] = coordinatesOfIntersectedArea[i].y();
-            vertices3[l++] = coordinatesOfIntersectedArea[i].z();
-        }
-        for (int i = 0; i < coordinatesOfIntersectedArea.size() * 4; i += 4) {
-            color3[i] = 0.0f;   // Red component
-            color3[i + 1] = 1.0f; // Green component 
-            color3[i + 2] = 0.0f; // Blue component
-            color3[i + 3] = 0.7f; // Alpha component 
-        }
-        glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vertices3);
-        glVertexAttribPointer(m_colAttr, 4, GL_FLOAT, GL_FALSE, 0, color3);
+       
+        
+        vector<GLfloat> verticesOfIntersected;
+        verticesOfIntersected = verticesOfIntersectedPart();
+
+        vector<GLfloat> colorOfIntersected;
+        colorOfIntersected = verticesOfIntersectedPart();
+       
+        glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, verticesOfIntersected.data());
+        glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, 0, colorOfIntersected.data());
 
         glEnableVertexAttribArray(m_posAttr);
         glEnableVertexAttribArray(m_colAttr);
@@ -166,8 +148,8 @@ void OpenGLWindow::paintGL()
         glDisableVertexAttribArray(m_colAttr);
         glDisableVertexAttribArray(m_posAttr);
 
-        delete[] vertices3;
-        delete[] color3;
+        verticesOfIntersected.clear();
+        colorOfIntersected.clear();
     }
 
     mProgram->release();
@@ -207,6 +189,97 @@ void OpenGLWindow::initializeGL()
 
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
+}
+vector<GLfloat> OpenGLWindow::verticesOfFirstStl()
+{
+    std::vector<GLfloat> vertices1;
+
+    if (!coordinatesOfFirstStl.empty()) {
+        for (int i = 0; i < coordinatesOfFirstStl.size(); i++) {
+            vertices1.push_back(coordinatesOfFirstStl[i].x());
+            vertices1.push_back(coordinatesOfFirstStl[i].y());
+            vertices1.push_back(coordinatesOfFirstStl[i].z());
+        }
+    }
+
+    return vertices1;
+
+}
+
+vector<GLfloat> OpenGLWindow::verticesOfSecondStl()
+{
+
+    std::vector<GLfloat> vertices2;
+    int k = 0;
+    if (!coordinatesOfSecondStl.empty())
+    {
+        for (int i = 0; i < coordinatesOfSecondStl.size(); i++) {
+            vertices2.push_back( coordinatesOfSecondStl[i].x());
+            vertices2.push_back(coordinatesOfSecondStl[i].y());
+            vertices2.push_back(coordinatesOfSecondStl[i].z());
+        }
+    }
+    return vertices2;
+
+}
+vector<GLfloat> OpenGLWindow::verticesOfIntersectedPart()
+{
+    std::vector<GLfloat> vertices3;
+   
+    if (!coordinatesOfIntersectedArea.empty())
+    {
+    for (int i = 0; i < coordinatesOfIntersectedArea.size(); i++) {
+        vertices3.push_back(coordinatesOfIntersectedArea[i].x());
+        vertices3.push_back(coordinatesOfIntersectedArea[i].y());
+        vertices3.push_back(coordinatesOfIntersectedArea[i].z());
+    }
+}
+    return vertices3;
+
+}
+vector<GLfloat>OpenGLWindow::colorOfFirstStl()
+{
+    std::vector<GLfloat> colorOfStl1;
+
+    for (int i = 0; i < coordinatesOfFirstStl.size() * 4; i += 4) {
+        colorOfStl1.push_back(0.0f);   // Red component
+        colorOfStl1.push_back(1.0f);   // Green component
+        colorOfStl1.push_back(1.0f);   // Blue component
+        colorOfStl1.push_back(0.3f);   // Alpha component
+    }
+
+    return colorOfStl1;
+
+}
+
+vector<GLfloat>OpenGLWindow::colorOfSecondStl()
+{
+    std::vector<GLfloat> colorOfStl2;
+
+    for (int i = 0; i < coordinatesOfSecondStl.size() * 3; i += 3) {
+        colorOfStl2.push_back(1.0f);   // Red component
+        colorOfStl2.push_back(0.0f);   // Green component
+        colorOfStl2.push_back(1.0f);   // Blue component
+        colorOfStl2.push_back(0.3f);   // Alpha component
+    }
+
+    return colorOfStl2;
+
+}
+
+
+std::vector<GLfloat> OpenGLWindow::colorOfIntersectedArea()
+{
+    std::vector<GLfloat> colorOfIntersected;
+
+    for (int i = 0; i < coordinatesOfIntersectedArea.size() * 4; i += 4) {
+        colorOfIntersected.push_back(0.0f);   // Red component (50% darkness)
+        colorOfIntersected.push_back(1.0f);   // Green component (no green)
+        colorOfIntersected.push_back(0.0f);   // Blue component (no blue)
+        colorOfIntersected.push_back(0.7f);   // Alpha component (30% opacity)
+    }
+
+    return colorOfIntersected;
 }
 
 void OpenGLWindow::showDataOfFirstStl(std::string& filepath)

@@ -121,7 +121,7 @@
     <ClCompile Include="src\STLReader.cpp" />
     <ClCompile Include="src\STLWriter.cpp" />
     <ClCompile Include="src\Surface.cpp" />
-    <ClCompile Include="src\Sutherland.cpp" />
+    <ClCompile Include="src\ClippingAlgorithm.cpp" />
     <ClCompile Include="src\Triangle.cpp" />
     <ClCompile Include="src\Triangulation.cpp" />
     <ClCompile Include="src\Visualizer.cpp" />
@@ -143,7 +143,7 @@
     <ClInclude Include="headers\STLReader.h" />
     <ClInclude Include="headers\STLWriter.h" />
     <ClInclude Include="headers\Surface.h" />
-    <ClInclude Include="headers\SutherLand.h" />
+    <ClInclude Include="headers\ClippingAlgorithm.h" />
     <ClInclude Include="headers\Triangle.h" />
     <ClInclude Include="headers\Triangulation.h" />
     <QtMoc Include="headers\Visualizer.h" />
